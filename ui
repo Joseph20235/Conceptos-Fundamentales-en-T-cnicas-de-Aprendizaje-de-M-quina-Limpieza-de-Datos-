@@ -1,0 +1,41 @@
+import pandas as pd
+def solicitar_datos():
+    departamento = input("Digite el nombre del departamento que desea consultar (en MAYUSCULAS): ")
+    limite_registros = int(input("Digite el número de registros que desea obtener: "))
+    return departamento, limite_registros
+
+def imprimir_datos(datos):
+    print("{:<20} {:<20} {:<10} {:<20} {:<10}".format(
+        'Ciudad de ubicación',
+        'Nombre departamento',
+        'Edad',
+        'Tipo de contagio',
+        'Estado',
+    )
+    )
+    for indice, registro in datos.iterrows():  # Iterar sobre las filas del DataFrame
+        print("{:<20} {:<20} {:<10} {:<20} {:<10}".format(
+            registro['ciudad_municipio_nom'],
+            registro['departamento_nom'],
+            registro['edad'],
+            registro['fuente_tipo_contagio'],
+            registro['estado'],
+        )
+        )
+def obtener_informacion_basica(df):
+    print("Número de filas:", df.shape[0])
+    print("Número de columnas:", df.shape[1])
+    print("Nombres de las columnas:", df.columns.values.tolist())
+    print("Tipos de datos de las columnas:\n", df.dtypes)
+
+def identificar_valores_faltantes(df):
+    print("Columnas con valores faltantes:", df.columns[df.isnull().any()].tolist())
+    print("Número de filas con valores faltantes:", df.isnull().any(axis=1).sum())
+    print("Índices de muestra con datos faltantes:")
+    print(df[df.isnull().any(axis=1)].index.tolist()[:5])
+
+def limpiar_nombres_columnas(df, rename_dict={}, do_inplace=True):
+    if not rename_dict:
+        return df.rename(columns={col: col.lower().replace(' ', '_') for col in df.columns.values.tolist()}, inplace=do_inplace)
+    else:
+        return df.rename(columns=rename_dict, inplace=do_inplace)
